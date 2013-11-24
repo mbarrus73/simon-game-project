@@ -5,6 +5,8 @@ package simon;
 
 import javax.swing.ImageIcon;
 
+//import finalProject.Simon;
+
 
 /**
  * @author mbarrus73
@@ -12,11 +14,10 @@ import javax.swing.ImageIcon;
  */
 public enum SimonEnum
 {
-	ROCK( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Rock.png") ) ), 
-	PAPER( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Paper.png") ) ), 
-	SCISSORS( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Scissors.png") ) ), 
-	LIZARD( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Lizzard.png") ) ), 
-	SPOCK( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Spock.png") ) );
+	RED(new ImageIcon(SimonEnum.class.getResource(""))), 
+	BLUE(new ImageIcon(SimonEnum.class.getResource(""))),
+	GREEN(new ImageIcon(SimonEnum.class.getResource(""))), 
+	YELLOW(new ImageIcon(SimonEnum.class.getResource("")));
 
 private ImageIcon image;
 

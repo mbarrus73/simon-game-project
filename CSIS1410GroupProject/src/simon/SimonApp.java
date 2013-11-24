@@ -25,6 +25,7 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JTextPane;
@@ -36,6 +37,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @SuppressWarnings("serial")
 public class SimonApp extends JFrame {
@@ -51,6 +56,7 @@ public class SimonApp extends JFrame {
 	JButton btnVisualGreen;
 	JButton btnVisualBlue;
 	JButton btnVisualYellow;
+	ArrayList<String> scores = new ArrayList<>();
 	
 	private final ButtonGroup controlButtonDifficultyGroup = new ButtonGroup();
 
@@ -303,5 +309,21 @@ public class SimonApp extends JFrame {
 	        int length = Note.SAMPLE_RATE * ms / 1000;
 	        line.write(note.data(), 0, length);
 	}
+	public static void saveScore(int score, String name, ArrayList<String> list) {
+		try(BufferedReader reader = new BufferedReader(new FileReader("src/simon/HighScores.txt"));
+				PrintWriter writer = new PrintWriter("src/simon/HighScores.txt")) {
+			String line;
+			
+			while((line = reader.readLine()) != null){
+				list.add(line);
+			}
+			list.add(Integer.toString(score) + ", " + name);
+			Collections.sort(list);
+			for(String el : list) {
+				writer.println(el);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+	 }
 
 }
