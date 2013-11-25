@@ -236,9 +236,9 @@ public class SimonApp extends JFrame {
 		myButtonList.add( btnVisualBlue );
 		
 		List<Note> myNotes = new ArrayList<>();
+		myNotes.add( Note.C4);
 		myNotes.add( Note.A4);
 		myNotes.add( Note.B4);
-		myNotes.add( Note.C4);
 		myNotes.add( Note.D4);
 		
 		Border blackline = BorderFactory.createLineBorder(Color.black);
@@ -280,6 +280,20 @@ public class SimonApp extends JFrame {
 	        //int count = 0;
 	        int length = Note.SAMPLE_RATE * ms / 1000;
 	        line.write(note.data(), 0, length);
+	}
+	
+	private void playNote( Note note, int ms ) 
+	{
+		final AudioFormat af = new AudioFormat(Note.SAMPLE_RATE, 8, 1, true, true);
+        SourceDataLine line = null;
+     
+	        ms = Math.min(ms, Note.SECONDS * 1000);
+	        //int count = 0;
+	        int length = Note.SAMPLE_RATE * ms / 1000;
+	        line.write(note.data(), 0, length);
+	        
+	    line.drain();
+	    line.close();
 	}
 	
 	public static void saveScore(int score, String name, ArrayList<String> list) 
