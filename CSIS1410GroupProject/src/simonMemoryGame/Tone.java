@@ -16,8 +16,8 @@ public class Tone {
 		        line.open(af, Note.SAMPLE_RATE);
 		        line.start();
 		     
-		            play(line, noteToPlay, 500);
-		            play(line, Note.REST, 10);
+		            play(line, noteToPlay, 300);
+		            play(line, Note.REST, 5);
 		       
 		        line.drain();
 		        line.close();

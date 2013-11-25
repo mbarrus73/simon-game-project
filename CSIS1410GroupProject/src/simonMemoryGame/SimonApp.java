@@ -181,14 +181,7 @@ public class SimonApp extends JFrame {
 		            revalidate();
 		            repaint();
 					
-		            score = 0;
-					computer.clear();
-					player.clear();
-					new Thread(){
-						public void run(){
-							playGame();
-						}
-					}.start(); 
+		            clearAndPlay();
 				} else
 				{
 					lblNameError.setText( "You must enter in your name" );
@@ -235,14 +228,7 @@ public class SimonApp extends JFrame {
 	             revalidate();
 	             repaint();
 				
-	             score = 0;
-					computer.clear();
-					player.clear();
-					new Thread(){
-						public void run(){
-							playGame();
-						}
-					}.start(); 
+	             clearAndPlay();
 			}	
 		});
 		gameOver.add(btnPlayNewGame);
@@ -293,14 +279,7 @@ public class SimonApp extends JFrame {
 	            contentPane.add(pnlHighScore, BorderLayout.EAST);
 	            contentPane.add(pnlGame, BorderLayout.CENTER);
 	            
-	            score = 0;
-				computer.clear();
-				player.clear();
-				new Thread(){
-					public void run(){
-						playGame();
-					}
-				}.start(); 
+	            clearAndPlay();
 	            
 	            revalidate();
 	            repaint();
@@ -320,11 +299,22 @@ public class SimonApp extends JFrame {
 			}
 		});
 		scores.add(btnExit);
-		
-		
-		
-		
+
 		return scores;
+	}
+	
+	private void clearAndPlay()
+	{
+		score = 0;
+		lblGameScore.setText(Integer.toString(score));
+		computer.clear();
+		player.clear();
+		continueLoop = true;
+		new Thread(){
+			public void run(){
+				playGame();
+			}
+		}.start(); 
 	}
 
 	private JPanel createGamePanel() {
@@ -466,7 +456,7 @@ public class SimonApp extends JFrame {
 		
 				myDebug( "Got Blue" );
 				playTone( 0 );
-				btnBlue.doClick( 1000 );
+				btnBlue.doClick( 700 );
 				
 			
 				//Pause the execution for one second (if the arraylist has more
@@ -477,22 +467,22 @@ public class SimonApp extends JFrame {
 			
 				myDebug( "Got Red" );
 				playTone( 1 );
-				btnRed.doClick( 1000 );
+				btnRed.doClick( 700 );
 				
 			} else if ( computer.get( i ) == 2 ) //Yellow Button
 			{  
 				myDebug( "Got Yellow" );
 				playTone( 2 );
-				btnYellow.doClick( 1000 ); 
+				btnYellow.doClick( 700 ); 
 				
 			} else if (computer.get(i) == 3)  //Green Button
 			{ 
 				myDebug( "Got Green" );
 				playTone( 3 );
-				btnGreen.doClick(1100);
+				btnGreen.doClick(700);
 			}
 			try {
-				Thread.sleep(250);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
