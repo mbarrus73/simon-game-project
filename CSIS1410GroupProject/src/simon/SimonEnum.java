@@ -12,24 +12,35 @@ import javax.swing.ImageIcon;
  */
 public enum SimonEnum
 {
-	ROCK( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Rock.png") ) ), 
-	PAPER( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Paper.png") ) ), 
-	SCISSORS( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Scissors.png") ) ), 
-	LIZARD( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Lizzard.png") ) ), 
-	SPOCK( new ImageIcon( SimonEnum.class.getResource("RockPaperScissors-Spock.png") ) );
+	RED( new ImageIcon( SimonEnum.class.getResource("red.jpg") ) 
+		, new ImageIcon( SimonEnum.class.getResource( "red_light.jpg") ) ), 
+	BLUE( new ImageIcon( SimonEnum.class.getResource("blue.jpg") ) 
+		, new ImageIcon( SimonEnum.class.getResource( "blue_light.jpg" ) ) ), 
+	YELLOW( new ImageIcon( SimonEnum.class.getResource("yellow.jpg") ) 
+		, new ImageIcon( SimonEnum.class.getResource( "yellow_light.jpg" ) ) ), 
+	GREEN( new ImageIcon( SimonEnum.class.getResource("green.jpg") ) 
+		, new ImageIcon( SimonEnum.class.getResource( "green_light.jpg" ) ) )
+	;
 
-private ImageIcon image;
-
-/**
- * @param image
- */
-private SimonEnum( ImageIcon image )
-{
-	this.image = image;
-}
-
-public ImageIcon getImage()
-{
-	return image;
-}
+	private ImageIcon image;
+	private ImageIcon imagePressed;
+	
+	/**
+	 * @param image
+	 */
+	private SimonEnum( ImageIcon image, ImageIcon imagePressed )
+	{
+		this.image = image;
+		this.imagePressed = imagePressed;
+	}
+	
+	public ImageIcon getImage()
+	{
+		return image;
+	}
+	
+	public ImageIcon getImagePressed()
+	{
+		return imagePressed;
+	}
 }

@@ -29,7 +29,6 @@ import java.util.List;
 
 import javax.swing.JTextPane;
 
-
 import toneTest.Note;
 
 import java.awt.event.MouseAdapter;
@@ -122,9 +121,6 @@ public class SimonApp extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("New label");
 		playgroundControls.add(lblNewLabel_1, BorderLayout.CENTER);
 		
-		
-		
-		
 	}
 	
 	private JPanel createHighScore() {
@@ -154,24 +150,23 @@ public class SimonApp extends JFrame {
 		JPanel player = new JPanel();
 		
 		player.setLayout(new GridLayout(0, 2, 0, 0));
-		
-		final Icon red = SimonEnum.ROCK.getImage();
-		final Icon green = SimonEnum.PAPER.getImage();
-		final Icon blue = SimonEnum.SCISSORS.getImage();
-		final Icon yello = SimonEnum.LIZARD.getImage();
-		
-		btnVisualRed = new JButton(red);
-		player.add(btnVisualRed);
-		
+	
+		final Icon green = SimonEnum.GREEN.getImage();
 		btnVisualGreen = new JButton(green);
 		player.add(btnVisualGreen);
 		
+		final Icon red = SimonEnum.RED.getImage();
+		btnVisualRed = new JButton(red);
+		player.add(btnVisualRed);
+		
+		final Icon yellow = SimonEnum.YELLOW.getImage();	
+		btnVisualYellow = new JButton(yellow);
+		player.add(btnVisualYellow);
+		
+		final Icon blue = SimonEnum.BLUE.getImage();
 		btnVisualBlue = new JButton(blue);
 		player.add(btnVisualBlue);
 		
-		btnVisualYellow = new JButton(yello);
-		player.add(btnVisualYellow);
-	
 		return player;
 	}
 
@@ -180,25 +175,6 @@ public class SimonApp extends JFrame {
 
 		JPanel controls = new JPanel();
 		controls.setLayout(new GridLayout(10, 0, 0, 0));
-		
-		JLabel lblDiffucultyLevel = new JLabel("Difficulty Level");
-		controls.add(lblDiffucultyLevel);
-		
-		JRadioButton rdbtnDifficultyEasy = new JRadioButton("Easy x1");
-		controlButtonDifficultyGroup.add(rdbtnDifficultyEasy);
-		controls.add(rdbtnDifficultyEasy);
-		
-		JRadioButton rdbtnDifficultyMedium = new JRadioButton("Easy x2");
-		controlButtonDifficultyGroup.add(rdbtnDifficultyMedium);
-		controls.add(rdbtnDifficultyMedium);
-		
-		JRadioButton rdbtnDifficultyHard = new JRadioButton("Easy x4");
-		controlButtonDifficultyGroup.add(rdbtnDifficultyHard);
-		controls.add(rdbtnDifficultyHard);
-		
-		JRadioButton rdbtnDifficultyExtremelyHard = new JRadioButton("Easy x8");
-		controlButtonDifficultyGroup.add(rdbtnDifficultyExtremelyHard);
-		controls.add(rdbtnDifficultyExtremelyHard);
 		
 		JButton btnPlayGame = new JButton("Play Game");
 		btnPlayGame.addActionListener(new ActionListener() {
@@ -236,7 +212,7 @@ public class SimonApp extends JFrame {
 		return controls;
 	}
 	
-	private void playSequence() 
+	private void playSequence()
 	{
 		List<Integer> myList = new ArrayList<>();
 		myList.add(0);
@@ -248,10 +224,10 @@ public class SimonApp extends JFrame {
 		myList.add(0);
 		
 		List<JButton> myButtonList = new ArrayList<>();
-		myButtonList.add( btnVisualRed );
 		myButtonList.add( btnVisualGreen );
-		myButtonList.add( btnVisualBlue );
+		myButtonList.add( btnVisualRed );
 		myButtonList.add( btnVisualYellow );
+		myButtonList.add( btnVisualBlue );
 		
 		List<Note> myNotes = new ArrayList<>();
 		myNotes.add( Note.A4);
@@ -262,36 +238,34 @@ public class SimonApp extends JFrame {
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		Border empty = BorderFactory.createEmptyBorder();
 		
-		Icon buttonPress = SimonEnum.SPOCK.getImage();
 		
-		final AudioFormat af = new AudioFormat(Note.SAMPLE_RATE, 8, 1, true, true);
-        SourceDataLine line;
+		List<Icon> myButtonPressed = new ArrayList<>();
+		
+		myButtonPressed.add( SimonEnum.GREEN.getImagePressed() );
+		myButtonPressed.add( SimonEnum.RED.getImagePressed() );
+		myButtonPressed.add( SimonEnum.YELLOW.getImagePressed() );
+		myButtonPressed.add( SimonEnum.BLUE.getImagePressed() );
+		
+		Icon defaultImage;
+		
+		//final AudioFormat af = new AudioFormat(Note.SAMPLE_RATE, 8, 1, true, true);
+        //SourceDataLine line;
         
-        try {
-			line = AudioSystem.getSourceDataLine(af);
-		
-		
-	        line.open(af, Note.SAMPLE_RATE);
-	        line.start();
-		
-			for( int i : myList )
-			{
-				Icon defaultImage = myButtonList.get(i).getIcon();
-				myButtonList.get(i).setIcon(buttonPress);
-				//player.revalidate();
-				//player.repaint();
-				play(line, myNotes.get(i), 500);
-				myButtonList.get(i).setIcon(defaultImage);
-				//player.revalidate();
-				//player.repaint();
-			}
-			line.drain();
-			line.close();
-        } catch (LineUnavailableException e)
-        {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-        }
+        for( int i : myList )
+		{
+			
+			//System.out.println( i );
+			
+			defaultImage = myButtonList.get(i).getIcon();
+			
+			myButtonList.get(i).setIcon(myButtonPressed.get(i));
+			
+			//play(line, myNotes.get(i), 400);
+			myButtonList.get(i).setIcon(defaultImage);
+			
+		}
+		//line.drain();
+		//line.close();
 	}
 	
 	private void play(SourceDataLine line, Note note, int ms) 
