@@ -140,7 +140,7 @@ public class SimonApp extends JFrame {
 		//contentPane.add(pnlGame, BorderLayout.CENTER);
 		
 		pnlHighScore = createHighScorePanel();
-		contentPane.add(pnlHighScore, BorderLayout.EAST);
+		//contentPane.add(pnlHighScore, BorderLayout.EAST);
 		
 		pnlHighScoreList = createHighScoreListPanel();
 		//contentPane.add(pnlHighScoreList, BorderLayout.CENTER);
@@ -516,46 +516,60 @@ public class SimonApp extends JFrame {
 		
 		playTone( selected );
 		
-		for( int i = 0; i < player.size(); i++ )
+		if( player.size() > computer.size() )
 		{
-			
-			if( !player.get(i).equals( computer.get(i) ) )
-			{
-				myDebug( "Player: " + player.get(i).toString() );
-				myDebug( "Computer: " + computer.get(i).toString() );
-				myDebug("Game Over");
-				
-				contentPane.removeAll();
-	            
-				lblScore.setText( Integer.toString( score ) );
-	            contentPane.add(pnlGameOver, BorderLayout.CENTER);
-	            revalidate();
-	            repaint();
-				
-	            //System.out.println( score );
-	            
-	            saveScore( score, tfName.getText() );
-				continueLoop = false;
-			}
-			
+			gameOver();
 		}
 		
-		
-		if( player.size() == computer.size() )
-		{	
-			score++;
-			lblGameScore.setText( Integer.toString(score));
-			myDebug( "\nNew Round\n");
-			if( continueLoop )
+		if( continueLoop )
+		{
+			for( int i = 0; i < player.size(); i++ )
 			{
-				player.clear();
-				new Thread(){
-					public void run(){
-						playGame();
-					}
-				}.start(); 
+				
+				if( !player.get(i).equals( computer.get(i) ) )
+				{
+					myDebug( "Player: " + player.get(i).toString() );
+					myDebug( "Computer: " + computer.get(i).toString() );
+					myDebug("Game Over");
+					
+					gameOver();
+				}
+				
+			}
+		
+		
+		
+			if( player.size() == computer.size() )
+			{	
+				score++;
+				lblGameScore.setText( Integer.toString(score));
+				myDebug( "\nNew Round\n");
+				if( continueLoop )
+				{
+					player.clear();
+					new Thread(){
+						public void run(){
+							playGame();
+						}
+					}.start(); 
+				}
 			}
 		}
+	}
+	
+	private void gameOver()
+	{
+		contentPane.removeAll();
+        
+		lblScore.setText( Integer.toString( score ) );
+        contentPane.add(pnlGameOver, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+		
+        //System.out.println( score );
+        
+        saveScore( score, tfName.getText() );
+		continueLoop = false;
 	}
 
 	/*
