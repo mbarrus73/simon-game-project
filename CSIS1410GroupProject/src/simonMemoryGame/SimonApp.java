@@ -12,6 +12,7 @@ import javax.swing.border.EmptyBorder;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -25,16 +26,34 @@ import java.awt.event.MouseEvent;
 import java.awt.Component;
 import java.awt.Color;
 
+import javax.swing.SwingConstants;
+import javax.xml.ws.handler.MessageContext.Scope;
+
+import java.awt.Dimension;
+import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.swing.JTextField;
+
 public class SimonApp extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel pnlGame;
+	private JPanel pnlHighScore;
+	private JPanel pnlGameOver;
+	private JPanel pnlWelcome;
+	
+	private int score = 0;
+	
+	
+	
 	boolean continueLoop = true;
 	
 	ArrayList<Integer> computer = new ArrayList<Integer>();
 	ArrayList<Integer> player = new ArrayList<Integer>();
-	
-	
 	
 	private boolean testMode = true;
 	
@@ -46,6 +65,20 @@ public class SimonApp extends JFrame {
 	private JTextArea txtrDebug;
 	
 	final List<Note> myNotes = new ArrayList<>();
+	private JLabel lblGameOver;
+	private JLabel lblYourScore;
+	private JLabel lblScore = new JLabel("0");
+	private JButton btnPlayNewGame;
+	private JButton btnExit;
+	private JButton btnShowHighScores;
+	private JLabel lblNewLabel;
+	private JLabel lblBlank;
+	private JLabel lblGameScore;
+	private JButton btnLetsPlay;
+	private JTextField tfName;
+	private JLabel lblName;
+	private JLabel lblNameError;
+	
 	
 	
 
@@ -83,12 +116,149 @@ public class SimonApp extends JFrame {
 		
 		txtrDebug = new JTextArea();
 		txtrDebug.setText("Debug");
-		contentPane.add(txtrDebug, BorderLayout.EAST);
+		//contentPane.add(txtrDebug, BorderLayout.EAST);
+		
+		pnlWelcome = createWelcomePanel();
+		contentPane.add(pnlWelcome, BorderLayout.CENTER);
 		
 		pnlGame = createGamePanel();
-		contentPane.add(pnlGame, BorderLayout.WEST);
+		//contentPane.add(pnlGame, BorderLayout.CENTER);
+		
+		pnlHighScore = createHighScorePanel();
+		//contentPane.add(pnlHighScore, BorderLayout.EAST);
+		
+		pnlGameOver = createGameOverPanel();
+		//contentPane.add(pnlGameOver, BorderLayout.CENTER);
+		
+	}
+
+	private JPanel createWelcomePanel() {
+		JPanel welcomePanel = new JPanel();
+		welcomePanel.setLayout(new GridLayout(10, 1, 0, 0));
+		
+		lblName = new JLabel("Enter Name");
+		welcomePanel.add(lblName);
+		
+		tfName = new JTextField();
+		tfName.setHorizontalAlignment(SwingConstants.CENTER);
+		welcomePanel.add(tfName);
+	
 		
 		
+		btnLetsPlay = new JButton("Play");
+		btnLetsPlay.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if( !tfName.getText().isEmpty() )
+				{
+					contentPane.removeAll();
+		            contentPane.add(pnlHighScore, BorderLayout.EAST);
+		            contentPane.add(pnlGame, BorderLayout.CENTER);
+		            revalidate();
+		            repaint();
+					
+		            score = 0;
+					computer.clear();
+					player.clear();
+					new Thread(){
+						public void run(){
+							playGame();
+						}
+					}.start(); 
+				} else
+				{
+					lblNameError.setText( "You must enter in your name" );
+				}
+			}
+		});
+		welcomePanel.add(btnLetsPlay);
+		
+		lblNameError = new JLabel("");
+		lblNameError.setForeground(Color.RED);
+		welcomePanel.add(lblNameError);
+		
+		return welcomePanel;
+	}
+
+	private JPanel createGameOverPanel() {
+		JPanel gameOver = new JPanel();
+		gameOver.setLayout(new GridLayout(10, 1, 0, 0));
+		
+		lblGameOver = new JLabel("GAME OVER!");
+		lblGameOver.setFont(new Font("Lucida Grande", Font.BOLD, 40));
+		lblGameOver.setHorizontalAlignment(SwingConstants.CENTER);
+		gameOver.add(lblGameOver);
+		
+		lblYourScore = new JLabel("Your Score:");
+		lblYourScore.setFont(new Font("Lucida Grande", Font.BOLD, 26));
+		lblYourScore.setHorizontalAlignment(SwingConstants.CENTER);
+		gameOver.add(lblYourScore);
+		
+	
+		lblScore.setFont(new Font("Lucida Grande", Font.BOLD, 30));
+		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		gameOver.add(lblScore);
+		
+		btnPlayNewGame = new JButton("Play New Game");
+		btnPlayNewGame.setSize(new Dimension(150, 50));
+		btnPlayNewGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				 contentPane.removeAll();
+	             contentPane.add(pnlHighScore, BorderLayout.EAST);
+	             contentPane.add(pnlGame, BorderLayout.CENTER);
+	             revalidate();
+	             repaint();
+				
+	             score = 0;
+				computer.clear();
+				player.clear();
+				new Thread(){
+					public void run(){
+						playGame();
+					}
+				}.start(); 
+			}	
+		});
+		gameOver.add(btnPlayNewGame);
+		
+		
+		return gameOver;
+	}
+
+	private JPanel createHighScorePanel() {
+		JPanel scores = new JPanel();
+		scores.setLayout(new GridLayout(5, 1, 0, 0));
+		
+		lblNewLabel = new JLabel("Your Score");
+		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		scores.add(lblNewLabel);
+		
+		lblGameScore = new JLabel("");
+		lblGameScore.setFont(new Font("Lucida Grande", Font.BOLD, 40));
+		lblGameScore.setHorizontalAlignment(SwingConstants.CENTER);
+		scores.add(lblGameScore);
+		
+		lblBlank = new JLabel("");
+		scores.add(lblBlank);
+		
+		
+		btnShowHighScores = new JButton("High Scores");
+		scores.add(btnShowHighScores);
+		
+		btnExit = new JButton("Exit");
+		btnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		scores.add(btnExit);
+		
+		
+		
+		
+		return scores;
 	}
 
 	private JPanel createGamePanel() {
@@ -176,11 +346,7 @@ public class SimonApp extends JFrame {
 		
 		gamePanel.add(btnBlue);
 		
-		new Thread(){
-			public void run(){
-				playGame();
-			}
-		}.start(); 
+		
 		
 		 
 		return gamePanel;
@@ -288,6 +454,17 @@ public class SimonApp extends JFrame {
 				myDebug( "Player: " + player.get(i).toString() );
 				myDebug( "Computer: " + computer.get(i).toString() );
 				myDebug("Game Over");
+				
+				contentPane.removeAll();
+	            
+				lblScore.setText( Integer.toString( score ) );
+	            contentPane.add(pnlGameOver, BorderLayout.CENTER);
+	            revalidate();
+	            repaint();
+				
+	            System.out.println( score );
+	            
+	            saveScore( score, tfName.getText() );
 				continueLoop = false;
 			}
 			
@@ -296,6 +473,8 @@ public class SimonApp extends JFrame {
 		
 		if( player.size() == computer.size() )
 		{	
+			score++;
+			lblGameScore.setText( Integer.toString(score));
 			myDebug( "\nNew Round\n");
 			if( continueLoop )
 			{
@@ -309,4 +488,40 @@ public class SimonApp extends JFrame {
 		}
 	}
 
+	public static void saveScore(int score, String name) 
+	{
+		ArrayList<String> list = new ArrayList<>();
+		String line;
+		try(BufferedReader input = new BufferedReader(new FileReader("src/simonMemoryGame/HighScores.txt")))
+		{
+			while( ( line = input.readLine() ) != null)
+			{
+				System.out.println( line );
+				list.add(line);
+			}
+		
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		list.add(Integer.toString(score) + ", " + name);
+		Collections.sort(list);
+		
+		try( PrintWriter writer = new PrintWriter( "src/simonMemoryGame/HighScores.txt" ) )
+		{
+			//String[] words = allWords.split( " " );
+			for(String el : list) 
+			{
+				writer.println(el);
+			}
+			
+		} catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
 }
