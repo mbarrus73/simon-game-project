@@ -5,6 +5,7 @@ package simon;
 
 import javax.swing.ImageIcon;
 
+//import finalProject.Simon;
 
 /**
  * @author mbarrus73
