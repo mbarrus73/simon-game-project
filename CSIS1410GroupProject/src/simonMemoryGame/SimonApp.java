@@ -37,12 +37,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import java.awt.FlowLayout;
 
 public class SimonApp extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel pnlGame;
 	private JPanel pnlHighScore;
+	private JPanel pnlHighScoreList;
 	private JPanel pnlGameOver;
 	private JPanel pnlWelcome;
 	
@@ -71,6 +74,7 @@ public class SimonApp extends JFrame {
 	private JButton btnPlayNewGame;
 	private JButton btnExit;
 	private JButton btnShowHighScores;
+	private JButton btnPlayGameFromScores;
 	private JLabel lblNewLabel;
 	private JLabel lblBlank;
 	private JLabel lblGameScore;
@@ -78,8 +82,8 @@ public class SimonApp extends JFrame {
 	private JTextField tfName;
 	private JLabel lblName;
 	private JLabel lblNameError;
-	
-	
+	private JLabel jlblHighScores;
+	private JTextPane jtpScores;
 	
 
 	/**
@@ -108,7 +112,7 @@ public class SimonApp extends JFrame {
 		myNotes.add( Note.D4);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 375);
+		setBounds(100, 100, 440, 355);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -125,11 +129,32 @@ public class SimonApp extends JFrame {
 		//contentPane.add(pnlGame, BorderLayout.CENTER);
 		
 		pnlHighScore = createHighScorePanel();
-		//contentPane.add(pnlHighScore, BorderLayout.EAST);
+		contentPane.add(pnlHighScore, BorderLayout.EAST);
+		
+		pnlHighScoreList = createHighScoreListPanel();
+		//contentPane.add(pnlHighScoreList, BorderLayout.CENTER);
 		
 		pnlGameOver = createGameOverPanel();
 		//contentPane.add(pnlGameOver, BorderLayout.CENTER);
 		
+		
+		
+	}
+
+	private JPanel createHighScoreListPanel() {
+		JPanel highScoreList = new JPanel();
+		highScoreList.setLayout(new BorderLayout(0, 0));
+		
+		jtpScores = new JTextPane();
+		highScoreList.add(jtpScores, BorderLayout.CENTER);
+		
+		jlblHighScores = new JLabel();
+		jlblHighScores.setText("High Scores");
+		highScoreList.add(jlblHighScores, BorderLayout.NORTH);
+		
+		
+		
+		return highScoreList;
 	}
 
 	private JPanel createWelcomePanel() {
@@ -211,13 +236,13 @@ public class SimonApp extends JFrame {
 	             repaint();
 				
 	             score = 0;
-				computer.clear();
-				player.clear();
-				new Thread(){
-					public void run(){
-						playGame();
-					}
-				}.start(); 
+					computer.clear();
+					player.clear();
+					new Thread(){
+						public void run(){
+							playGame();
+						}
+					}.start(); 
 			}	
 		});
 		gameOver.add(btnPlayNewGame);
@@ -228,7 +253,7 @@ public class SimonApp extends JFrame {
 
 	private JPanel createHighScorePanel() {
 		JPanel scores = new JPanel();
-		scores.setLayout(new GridLayout(5, 1, 0, 0));
+		scores.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		lblNewLabel = new JLabel("Your Score");
 		lblNewLabel.setFont(new Font("Lucida Grande", Font.BOLD, 20));
@@ -245,7 +270,48 @@ public class SimonApp extends JFrame {
 		
 		
 		btnShowHighScores = new JButton("High Scores");
+		btnShowHighScores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				contentPane.removeAll();
+	            contentPane.add(pnlHighScore, BorderLayout.EAST);
+	            contentPane.add(pnlHighScoreList, BorderLayout.CENTER);
+	            revalidate();
+	            repaint();
+				
+	            readInHighScores();
+				
+	            btnShowHighScores.setVisible(false);
+	            btnPlayGameFromScores.setVisible(true);
+			}
+		});
 		scores.add(btnShowHighScores);
+		
+		btnPlayGameFromScores = new JButton("Play Game");
+		btnPlayGameFromScores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				contentPane.removeAll();
+	            contentPane.add(pnlHighScore, BorderLayout.EAST);
+	            contentPane.add(pnlGame, BorderLayout.CENTER);
+	            
+	            score = 0;
+				computer.clear();
+				player.clear();
+				new Thread(){
+					public void run(){
+						playGame();
+					}
+				}.start(); 
+	            
+	            revalidate();
+	            repaint();
+			
+				
+	            btnPlayGameFromScores.setVisible(false);
+	            btnShowHighScores.setVisible(true);
+			}
+		});
+		btnPlayGameFromScores.setVisible(false);
+		scores.add(btnPlayGameFromScores);
 		
 		btnExit = new JButton("Exit");
 		btnExit.addActionListener(new ActionListener() {
@@ -274,13 +340,14 @@ public class SimonApp extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				Icon clickGreenImage = SimonEnum.GREEN.getImagePressed();
 				btnGreen.setIcon(clickGreenImage);
-				addTurns(3);
+				
 			}
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Icon clickGreenImage = SimonEnum.GREEN.getImage();
 				btnGreen.setIcon(clickGreenImage);
+				addTurns(3);
 			}
 		});
 		
@@ -294,12 +361,13 @@ public class SimonApp extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				Icon clickRedImage = SimonEnum.RED.getImagePressed();
 				btnRed.setIcon(clickRedImage);
-				addTurns(1);
+				
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Icon clickRedImage = SimonEnum.RED.getImage();
 				btnRed.setIcon(clickRedImage);
+				addTurns(1);
 			}
 		});
 		
@@ -315,12 +383,13 @@ public class SimonApp extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				Icon clickYellowImage = SimonEnum.YELLOW.getImagePressed();
 				btnYellow.setIcon(clickYellowImage);
-				addTurns(2);
+				
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Icon clickYellowImage = SimonEnum.YELLOW.getImage();
 				btnYellow.setIcon(clickYellowImage);
+				addTurns(2);
 			}
 		});
 	
@@ -328,19 +397,19 @@ public class SimonApp extends JFrame {
 		
 		final Icon blue = SimonEnum.BLUE.getImage();
 		btnBlue = new JButton(blue);
-		btnBlue.setBackground(Color.BLACK);
 		btnBlue.setBorder(null);
 		btnBlue.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Icon clickBlueImage = SimonEnum.BLUE.getImagePressed();
 				btnBlue.setIcon(clickBlueImage);
-				addTurns(0);
+				
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Icon clickBlueImage = SimonEnum.BLUE.getImage();
 				btnBlue.setIcon(clickBlueImage);
+				addTurns(0);
 			}
 		});
 		
@@ -462,7 +531,7 @@ public class SimonApp extends JFrame {
 	            revalidate();
 	            repaint();
 				
-	            System.out.println( score );
+	            //System.out.println( score );
 	            
 	            saveScore( score, tfName.getText() );
 				continueLoop = false;
@@ -496,7 +565,7 @@ public class SimonApp extends JFrame {
 		{
 			while( ( line = input.readLine() ) != null)
 			{
-				System.out.println( line );
+				//System.out.println( line );
 				list.add(line);
 			}
 		
@@ -522,6 +591,26 @@ public class SimonApp extends JFrame {
 		}
 		
 		
+	}
+	
+	private void readInHighScores()
+	{
+		StringBuilder sb = new StringBuilder();
+		String line;
+		try(BufferedReader input = new BufferedReader(new FileReader("src/simonMemoryGame/HighScores.txt")))
+		{
+			while( ( line = input.readLine() ) != null)
+			{
+				String[] myLine = line.split(",");
+				sb.append( String.format("%s %20s%n",  myLine[0], myLine[1] ) );
+			}
+		
+			jtpScores.setText(sb.toString());
+			
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 	
 }
