@@ -558,6 +558,9 @@ public class SimonApp extends JFrame {
 		}
 	}
 
+	/*
+	 * This should satisfy IO requirement
+	 */
 	public static void saveScore(int score, String name) 
 	{
 		ArrayList<String> list = new ArrayList<>();
@@ -594,6 +597,9 @@ public class SimonApp extends JFrame {
 		
 	}
 	
+	/*
+	 * This should satisfy IO requirement
+	 */
 	private void readInHighScores()
 	{
 		StringBuilder sb = new StringBuilder();
