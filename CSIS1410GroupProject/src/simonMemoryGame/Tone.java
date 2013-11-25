@@ -1,3 +1,17 @@
+/**
+ *  Project			:  A09 Team Project
+ *  File			:  Note.java
+ *  Name			:  Marcellus Barrus and Mike Lawrence
+ *  Date Created	:  2013-11-16
+ *	Date Due		:  2013-11-24
+ * 
+ *  Description: Simon Memory Game
+ *  
+ *  The notes that the simon memory game uses.  This was actually taken from code posted 
+ *  stackoverflow.com but modified to work as a static class to be used within the simon app
+ *  
+ */
+
 package simonMemoryGame;
 
 import javax.sound.sampled.AudioFormat;

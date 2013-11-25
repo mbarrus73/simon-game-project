@@ -1,3 +1,16 @@
+/**
+ *  Project			:  A09 Team Project
+ *  File			:  SimonApp.java
+ *  Name			:  Marcellus Barrus and Mike Lawrence
+ *  Date Created	:  2013-11-16
+ *	Date Due		:  2013-11-24
+ * 
+ *  Description: Simon Memory Game
+ *  
+ *  You guess in sequence what the computer chooses. 
+ *  
+ */
+
 package simonMemoryGame;
 
 import java.awt.BorderLayout;
@@ -50,9 +63,7 @@ public class SimonApp extends JFrame {
 	private JPanel pnlWelcome;
 	
 	private int score = 0;
-	
-	
-	
+
 	boolean continueLoop = true;
 	
 	ArrayList<Integer> computer = new ArrayList<Integer>();

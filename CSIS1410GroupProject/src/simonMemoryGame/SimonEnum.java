@@ -1,5 +1,14 @@
 /**
+ *  Project			:  A09 Team Project
+ *  File			:  SimonEnum.java
+ *  Name			:  Marcellus Barrus and Mike Lawrence
+ *  Date Created	:  2013-11-16
+ *	Date Due		:  2013-11-24
  * 
+ *  Description: Simon Memory Game
+ *  
+ *  Creates images and methods to use as an enum
+ *  
  */
 package simonMemoryGame;
 
